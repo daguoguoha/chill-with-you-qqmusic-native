@@ -1,0 +1,23 @@
+name: Publish tested release
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-release.yml'
+      - 'downloads/**'
+      - 'tools/publish_release.py'
+      - 'RELEASE_TEXT.md'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Verify and publish the tested ZIP
+        run: python3 tools/publish_release.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
