@@ -1,8 +1,12 @@
 # Chill With You QQ 音乐原生播放器 · 一键部署包
 
-社区适配版 v1.0.0，将 QQ 音乐歌单接入《Chill with You: Lo-Fi Story》的原生歌曲列表和底部播放器。
+社区适配版 v1.0.1，将 QQ 音乐歌单接入《Chill with You: Lo-Fi Story》的原生歌曲列表和底部播放器。
 
 **[下载一键安装包](https://github.com/daguoguoha/chill-with-you-qqmusic-native/releases/latest)**
+
+## 隐藏游戏内入口
+
+按 **F9** 打开面板，在面板底部点击 **隐藏游戏内入口**，再收起面板。隐藏后仍可按 **F9** 打开，再点 **显示游戏内入口** 恢复。设置立即生效并保留到下次启动，两款插件分别设置。也可在游戏退出后修改 `BepInEx/config/local.chill.qqmusicplaylist.cfg` 中的 `[Panel] ShowLauncher = false`。
 
 ## 安装与使用
 
@@ -38,7 +42,7 @@
 
 插件需要从自己安装的游戏引用程序集，并引用安装器下载的 NAudio.Core / NAudio.Wasapi 2.2.1。使用本机 .NET Framework C# 编译器构建。
 
-GitHub 源码目录不含预编译的 ChillQQMusic.dll，需先用 BuildNative.ps1 构建原生桥接；普通用户请下载 Release 一键 ZIP，其中已包含对应 DLL。
+普通用户请下载 Release 一键 ZIP 并完整解压，其中已包含预编译的 ChillQQMusic.dll。GitHub 的 Source code ZIP 为源码目录，需先用 BuildNative.ps1 构建桥接后再安装。
 
 ```powershell
 .\Build.ps1 -GameDirectory 'E:\SteamLibrary\steamapps\common\Chill with You Lo-Fi Story'

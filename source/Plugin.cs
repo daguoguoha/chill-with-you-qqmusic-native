@@ -15,7 +15,7 @@ using UnityEngine.Networking;
 
 namespace ChillQQMusicPlaylist
 {
-    [BepInPlugin("local.chill.qqmusicplaylist", "QQ 音乐歌单", "1.0.0")]
+    [BepInPlugin("local.chill.qqmusicplaylist", "QQ 音乐歌单", "1.0.1")]
     [BepInProcess("Chill With You.exe")]
     public sealed partial class Plugin : BaseUnityPlugin
     {
@@ -25,6 +25,7 @@ namespace ChillQQMusicPlaylist
         AudioSource audio;
         UnityWebRequest request;
         ConfigEntry<float> volume;
+        ConfigEntry<bool> showLauncher;
         ConfigEntry<KeyboardShortcut> shortcut;
         Rect panel = new Rect(170, 70, 1000, 700);
         bool visible = false, busy, ready, logged, qrPolling, paused, playing, destroying, legacyInput = true;
@@ -56,6 +57,7 @@ namespace ChillQQMusicPlaylist
             host.Owner = this;
             volume = Config.Bind("Player", "Volume", 0.65f, "QQ 音乐音量，0 到 1。");
             shortcut = Config.Bind("Panel", "Shortcut", new KeyboardShortcut(KeyCode.F9), "显示或隐藏歌单面板。");
+            showLauncher = Config.Bind("Panel", "ShowLauncher", true, "是否显示游戏内入口按钮。隐藏后仍可按 F9 打开面板。");
             audio = runtime.AddComponent<AudioSource>();
             audio.playOnAwake = false;
             audio.volume = Mathf.Clamp01(volume.Value);
