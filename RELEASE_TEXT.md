@@ -1,7 +1,7 @@
-# v1.0.1 · QQ 音乐原生播放器一键部署包
+修复 QQ 音乐 v1.0.1 一键安装过程中下载 BepInEx.zip 超时的问题。
 
-新增游戏内入口按钮的隐藏开关。按 **F9** 打开面板，在底部点击 **隐藏游戏内入口**，收起面板后按钮即消失；按 **F9** 仍可打开面板，并通过 **显示游戏内入口** 恢复。设置自动保存，重启游戏后继续生效。网易云与 QQ 音乐分别设置。
+下载 **ChillQQMusicNative-1.0.2-OneClick.zip**，完整解压后退出游戏，再双击 **ChillQQMusicSetup.exe**。BepInEx 5.4.23.5 与 NAudio 2.2.1 官方依赖已经内置，安装阶段无需联网下载，仍逐个校验 SHA256。不要只复制安装器，offline-dependencies 文件夹必须保留。
 
-下载本页 Assets 中的 **ChillQQMusicNative-1.0.1-OneClick.zip**，完整解压，正常退出游戏后运行 **双击安装.cmd**，点击 **安装 / 更新**。更新会备份旧插件并保留已有账号和存档。
+本次只修改安装器和打包，游戏插件沿用已验证的 v1.0.1，F9、原生播放器切歌、隐藏入口均保留。账号与存档不会打包，也不会在更新时清除。登录、歌单和音乐播放仍需联网。
 
-适配按 GPL-3.0-or-later 开源，源码、构建脚本及第三方声明随包提供。感谢 ChillPatcher、BepInEx、HarmonyX 及各依赖作者，完整致谢与许可证见 THIRD_PARTY_NOTICES.md。发行包不含账号、Cookie、存档、音乐或游戏程序集。
+源码、原生桥接对应源码、依赖来源和开源许可证随包提供，详细信息见 README.md 和 THIRD_PARTY_NOTICES.md。

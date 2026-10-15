@@ -1,8 +1,12 @@
 # Chill With You QQ 音乐原生播放器 · 一键部署包
 
-社区适配版 v1.0.1，将 QQ 音乐歌单接入《Chill with You: Lo-Fi Story》的原生歌曲列表和底部播放器。
+社区适配版 v1.0.2，将 QQ 音乐歌单接入《Chill with You: Lo-Fi Story》的原生歌曲列表和底部播放器。
 
 **[下载一键安装包](https://github.com/daguoguoha/chill-with-you-qqmusic-native/releases/latest)**
+
+## v1.0.2 安装修复
+
+修复安装时从 GitHub 下载 BepInEx 超时的问题。完整一键包自带三个官方依赖，安装阶段无需联网；登录和播放音乐仍需联网。此版本只修改安装器和打包，游戏插件沿用已验证的 v1.0.1，切歌和隐藏入口功能保持一致。
 
 ## 隐藏游戏内入口
 
@@ -11,7 +15,7 @@
 ## 安装与使用
 
 1. 完整解压一键 ZIP，正常退出游戏，双击 **双击安装.cmd**。
-2. 安装窗口会查找 Steam 游戏目录，点击 **安装 / 更新**。首次联网下载约 1 MB 官方依赖并校验 SHA256。无网络时，已验证过的下载缓存可以复用。
+2. 安装窗口会查找 Steam 游戏目录，点击 **安装 / 更新**。BepInEx 与 NAudio 官方依赖已放在 `offline-dependencies/`，安装时只读取本地文件并校验 SHA256，无需联网下载。
 3. 从 Steam 启动游戏，按 **F9**。顶部可以选择 **QQ 扫码 / 微信扫码**，用对应手机应用扫码并由本人确认登录。
 4. 选择账号歌单，或点 **导入歌单**，粘贴完整的 `https://y.qq.com/n/ryqq/playlist/数字ID` 地址或数字 ID。短链接请先在浏览器打开，再复制完整地址。
 5. 在游戏原生播放列表顶部选择 **QQ 音乐 · 歌单名**，使用原生播放器播放、暂停、切歌和拖动进度。
@@ -40,7 +44,7 @@
 
 `source/` 是插件 C# 源码，`installer-source/` 是图形安装器源码，`Install.ps1` 是安装后端。`native-source/qqmusic_bridge/` 是经过修改的原生 Go 桥接完整源码；`native-source/vendor-source.zip` 包含所用 Go 依赖的源码及其许可证，BuildNative.ps1 会解压使用。
 
-插件需要从自己安装的游戏引用程序集，并引用安装器下载的 NAudio.Core / NAudio.Wasapi 2.2.1。使用本机 .NET Framework C# 编译器构建。
+插件需要从自己安装的游戏引用程序集，并引用随包提供的官方 NuGet 包中的 NAudio.Core / NAudio.Wasapi 2.2.1。使用本机 .NET Framework C# 编译器构建。
 
 普通用户请下载 Release 一键 ZIP 并完整解压，其中已包含预编译的 ChillQQMusic.dll。GitHub 的 Source code ZIP 为源码目录，需先用 BuildNative.ps1 构建桥接后再安装。
 
@@ -52,6 +56,10 @@
 ```
 
 原生桥接发布构建使用 Go 1.24.6、CGO、Zig 0.13.0 的 `zig cc -target x86_64-windows-gnu`，参数为 `-mod=vendor -trimpath -ldflags '-s -w' -buildmode=c-shared`。可使用兼容的 MinGW-w64 GCC；不同编译器可能生成不同哈希，重新编译后需更新安装器校验值。编译器本身不随包提供。
+
+## v1.0.2 离线安装验证
+
+原有 7 项安装回归全部通过。另将三个依赖 URL 全部替换为不可访问地址，仍成功完成全新安装；内置依赖被改动、内置依赖缺失时，均在写入游戏文件前明确报错。游戏插件 DLL 与 v1.0.1 完全一致，本次未重复进行游戏播放测试。
 
 ## 测试记录
 

@@ -5,9 +5,9 @@
 | 项目 | 用途与来源 | 许可证 |
 |---|---|---|
 | [ChillPatcher / QQMusic](https://github.com/BeyondtheApex/ChillPatcher/tree/4800dd2ac005c3c70e1bf1bc732e00f00556ec48/NativePlugins/qqmusic_bridge) | 基于 3.0.3，commit `4800dd2ac005c3c70e1bf1bc732e00f00556ec48` 的 Go 原生桥接及模块接口；QQ 音乐模块上游作者 @JinCao-0721，版权属于各上游贡献者 | GPL-3.0-or-later，根目录 LICENSE 及 licenses/ChillPatcher-LICENSE.txt |
-| [BepInEx](https://github.com/BepInEx/BepInEx) | 5.4.23.5 Windows x64 加载框架，由安装器从官方 GitHub 下载 | MIT，licenses/BepInEx-LICENSE.txt |
+| [BepInEx](https://github.com/BepInEx/BepInEx) | 5.4.23.5 Windows x64 加载框架，官方发布 ZIP 随离线包提供，安装时校验 SHA256 | MIT，licenses/BepInEx-LICENSE.txt |
 | [HarmonyX](https://github.com/BepInEx/HarmonyX) | BepInEx 提供的 Harmony 运行时补丁 API | MIT，licenses/HarmonyX-LICENSE.txt |
-| [NAudio](https://github.com/naudio/NAudio/tree/v2.2.1) | NAudio.Core / NAudio.Wasapi 2.2.1，由安装器从官方 NuGet 下载；通过系统 Media Foundation 解码音频 | MIT，licenses/NAudio-LICENSE.txt |
+| [NAudio](https://github.com/naudio/NAudio/tree/v2.2.1) | NAudio.Core / NAudio.Wasapi 2.2.1，官方 NuGet 包随离线包提供，安装时校验 SHA256；通过系统 Media Foundation 解码音频 | MIT，licenses/NAudio-LICENSE.txt |
 | [Go](https://go.dev/) | 1.24.6 编译及原生 Go 运行时 | BSD-3-Clause，licenses/Go-LICENSE.txt |
 | [MinGW-w64](https://www.mingw-w64.org/) | Zig 0.13.0 提供的 Windows C 运行时启动代码与接口 | 各文件版权条款及许可证，licenses/MinGW-w64-COPYING.txt |
 
