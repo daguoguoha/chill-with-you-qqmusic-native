@@ -18,3 +18,5 @@
 游戏、Unity、TextMeshPro、UniTask、R3、ObservableCollections、Newtonsoft.Json 等程序集仅从使用者的本地游戏中引用，不随包提供。Windows Media Foundation 由操作系统提供。QRCoder、go-musicfox 与 netease-music 未用于本 QQ 版。
 
 重新分发时请保留本适配、修改桥接及其依赖的对应源码、构建脚本、版权和许可证文本。
+
+真实播放记录兼容性实现的协议来源见 PLAYBACK_REPORTING.md；没有复制或分发平台网页播放器的整份代码或美术资源。

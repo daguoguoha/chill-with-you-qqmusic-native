@@ -326,7 +326,7 @@ namespace ChillQQMusicPlaylist
                 showLauncher.Value = !showLauncher.Value;
                 Config.Save();
             }
-            GUI.Label(new Rect(286, 636, 420, 24), "隐藏后仍可按 F9 打开面板", mutedText);
+            if (GUI.Button(new Rect(286, 631, 435, 30), new GUIContent("播放记录：" + (reportListening.Value ? "已开启" : "已关闭") + " · " + listeningMessage, "仅上报实际播放，平台决定统计结果。"), quietButton)) ToggleListening();
             if (GUI.Button(new Rect(750, 604, 210, 40), "收起并使用原生播放器", primaryButton)) visible = false;
             Label(new Rect(30, 675, 938, 17), status, smallText);
         }

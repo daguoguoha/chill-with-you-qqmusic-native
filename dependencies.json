@@ -10,7 +10,7 @@
       "fix initialization error mutex",
       "full playlist fallback"
     ],
-    "sha256": "3c555efd43c4f3f03f97edf22387017e34859d68784f0ae062e3b89260a13604",
+    "sha256": "2f18e342bf859054276f6ef1d40c284a09c6ab26cc0e7065c3e3a1be8ea75f8b",
     "license": "GPL-3.0-or-later"
   },
   "BepInEx": {

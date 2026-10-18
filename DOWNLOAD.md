@@ -1,5 +1,5 @@
-# 下载离线一键包
+# 候选版下载
 
-[下载 QQ 音乐 v1.0.2 离线一键包](https://github.com/daguoguoha/chill-with-you-qqmusic-native/releases/download/v1.0.2/ChillQQMusicNative-1.0.2-OneClick.zip)
+[QQ 音乐 v1.1.0-rc.1](https://github.com/daguoguoha/chill-with-you-qqmusic-native/releases/tag/v1.1.0-rc.1)
 
-完整解压，保留 offline-dependencies 文件夹，退出游戏后双击 ChillQQMusicSetup.exe。安装无需联网，扫码登录和播放音乐需联网。
+完整解压退出游戏后安装。平台时长入账尚待验证。
