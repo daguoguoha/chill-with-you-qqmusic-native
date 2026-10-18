@@ -10,7 +10,7 @@ import urllib.request
 root = pathlib.Path(__file__).resolve().parent.parent
 repo = os.environ['GITHUB_REPOSITORY']
 token = os.environ['GITHUB_TOKEN']
-tag = 'v1.1.0-rc.1'
+tag = 'v1.2.0-rc.1'
 api = 'https://api.github.com/repos/' + repo
 headers = {'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'}
 
@@ -39,7 +39,7 @@ except urllib.error.HTTPError as error:
         raise
     release = request(api + '/releases', 'POST', json.dumps({
         'tag_name': tag, 'target_commitish': os.environ['GITHUB_SHA'],
-        'name': 'v1.1.0-rc.1 · QQ 音乐真实播放记录候选版',
+        'name': 'v1.2.0-rc.1 · QQ 音乐透明歌词与启动续播候选版',
         'body': (root / 'RELEASE_TEXT.md').read_text(encoding='utf-8-sig'),
         'draft': False, 'prerelease': True, 'make_latest': 'false',
     }).encode())

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +10,7 @@ namespace ChillQQMusicPlaylist
         Font font;
         GUISkin panelSkin;
         readonly List<Texture2D> uiTextures = new List<Texture2D>();
-        GUIStyle titleText, headingText, bodyText, mutedText, smallText, accentText;
+        GUIStyle titleText, headingText, bodyText, mutedText, smallText, accentText, statusText;
         GUIStyle windowStyle, sidebarStyle, cardStyle, rowStyle, selectedStyle;
         GUIStyle buttonStyle, quietButton, primaryButton, inputStyle, badgeText;
         long selectedPlaylistId;
@@ -18,29 +18,30 @@ namespace ChillQQMusicPlaylist
         bool showImport;
         List<Song> cachedSongs;
         readonly List<int> filteredSongs = new List<int>();
-        readonly Color ink = new Color(0.91f, 0.94f, 0.99f);
-        readonly Color muted = new Color(0.56f, 0.63f, 0.74f);
-        readonly Color accent = new Color(0.74f, 0.70f, 0.98f);
+        readonly Color ink = GameTheme.Ink;
+        readonly Color muted = GameTheme.Muted;
+        readonly Color accent = GameTheme.Accent;
 
         Texture2D Texture(Color color, bool rounded)
         {
-            int size = rounded ? 32 : 1;
-            Texture2D texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
-            texture.hideFlags = HideFlags.HideAndDontSave;
-            for (int y = 0; y < size; y++)
-                for (int x = 0; x < size; x++)
-                {
-                    Color pixel = color;
-                    if (rounded)
-                    {
-                        float dx = Mathf.Max(7 - x, Mathf.Max(0, x - 24));
-                        float dy = Mathf.Max(7 - y, Mathf.Max(0, y - 24));
-                        pixel.a *= Mathf.Clamp01(7.5f - Mathf.Sqrt(dx * dx + dy * dy));
-                    }
-                    texture.SetPixel(x, y, pixel);
-                }
-            texture.Apply(); texture.filterMode = FilterMode.Bilinear;
-            uiTextures.Add(texture); return texture;
+            Texture2D texture=GameTheme.Surface(color,rounded);
+            uiTextures.Add(texture);return texture;
+        }
+        GUIStyle emblemStyle;
+        Texture2D dividerTexture;
+        bool DrawLauncher(Rect bounds,string label)
+        {
+            bool clicked=GUI.Button(bounds,new GUIContent("",label),quietButton);
+            GUI.Box(new Rect(bounds.x,bounds.y,42,42),"",emblemStyle);
+            GUI.Label(new Rect(bounds.x+13,bounds.y+7,26,28),"♪",bodyText);
+            GUI.Label(new Rect(bounds.x+50,bounds.y+7,bounds.width-50,28),label,mutedText);
+            return clicked;
+        }
+        void ThemeChrome()
+        {
+            GUI.DrawTexture(new Rect(20,82,960,1),dividerTexture);
+            GUI.DrawTexture(new Rect(276,91,1,472),dividerTexture);
+            GUI.DrawTexture(new Rect(20,571,960,1),dividerTexture);
         }
         GUIStyle BoxStyle(Color color)
         {
@@ -73,42 +74,46 @@ namespace ChillQQMusicPlaylist
         void EnsureUI()
         {
             if (panelSkin != null) return;
-            font = Font.CreateDynamicFontFromOSFont(new[] { "Microsoft YaHei", "SimHei", "Arial" }, 18);
+            font = Font.CreateDynamicFontFromOSFont(new[] { "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans CJK SC", "Arial" }, 18);
             panelSkin = Instantiate(GUI.skin); panelSkin.font = font;
-            titleText = TextStyle(25, ink, true);
-            headingText = TextStyle(21, ink, true);
+            emblemStyle=new GUIStyle();emblemStyle.normal.background=GameTheme.Emblem();
+            uiTextures.Add(emblemStyle.normal.background);
+            dividerTexture=Texture(new Color(0.64f,0.59f,0.73f,0.24f),false);
+            titleText = TextStyle(25, ink, false);
+            headingText = TextStyle(21, ink, false);
             bodyText = TextStyle(16, ink, false);
             mutedText = TextStyle(14, muted, false);
             smallText = TextStyle(12, muted, false);
-            accentText = TextStyle(15, accent, true);
+            statusText=TextStyle(13,muted,false);statusText.wordWrap=true;statusText.alignment=TextAnchor.UpperLeft;
+            accentText = TextStyle(15, accent, false);
             badgeText = TextStyle(12, accent, false); badgeText.alignment = TextAnchor.MiddleRight;
-            windowStyle = BoxStyle(new Color(0.065f, 0.085f, 0.13f, 0.99f));
-            sidebarStyle = BoxStyle(new Color(0.085f, 0.115f, 0.17f));
-            cardStyle = BoxStyle(new Color(0.10f, 0.135f, 0.20f));
-            selectedStyle = BoxStyle(new Color(0.19f, 0.20f, 0.32f));
-            rowStyle = ButtonStyle(new Color(0, 0, 0, 0), new Color(0.15f, 0.19f, 0.27f), ink);
-            buttonStyle = ButtonStyle(new Color(0.13f, 0.17f, 0.25f), new Color(0.19f, 0.23f, 0.32f), ink);
-            quietButton = ButtonStyle(new Color(0, 0, 0, 0), new Color(0.15f, 0.19f, 0.27f), muted);
-            primaryButton = ButtonStyle(accent, new Color(0.83f, 0.80f, 1f), new Color(0.10f, 0.09f, 0.20f));
-            primaryButton.fontStyle = FontStyle.Bold;
+            windowStyle = BoxStyle(GameTheme.Window);
+            sidebarStyle = BoxStyle(GameTheme.Sidebar);
+            cardStyle = BoxStyle(GameTheme.Card);
+            selectedStyle = BoxStyle(GameTheme.Selected);
+            rowStyle = ButtonStyle(new Color(0, 0, 0, 0), GameTheme.Hover, ink);
+            buttonStyle = ButtonStyle(GameTheme.Button, GameTheme.Hover, ink);
+            quietButton = ButtonStyle(new Color(0, 0, 0, 0), GameTheme.Hover, muted);
+            primaryButton = ButtonStyle(GameTheme.Selected, GameTheme.Hover, ink);
+            primaryButton.fontStyle = FontStyle.Normal;
             inputStyle = new GUIStyle(panelSkin.textField);
             inputStyle.font = font; inputStyle.fontSize = 15;
             inputStyle.alignment = TextAnchor.MiddleLeft;
             inputStyle.padding = new RectOffset(12, 12, 4, 4);
             inputStyle.border = new RectOffset(8, 8, 8, 8);
-            Texture2D input = Texture(new Color(0.12f, 0.16f, 0.23f), true);
-            Texture2D focused = Texture(new Color(0.17f, 0.21f, 0.31f), true);
+            Texture2D input = Texture(GameTheme.Input, true);
+            Texture2D focused = Texture(GameTheme.Focused, true);
             inputStyle.normal.background = inputStyle.hover.background = input;
             inputStyle.focused.background = inputStyle.active.background = focused;
             inputStyle.normal.textColor = inputStyle.hover.textColor = inputStyle.focused.textColor = inputStyle.active.textColor = ink;
             panelSkin.verticalScrollbar = new GUIStyle();
             panelSkin.verticalScrollbar.fixedWidth = 8;
-            panelSkin.verticalScrollbar.normal.background = Texture(new Color(0.08f, 0.11f, 0.16f), true);
-            panelSkin.verticalScrollbarThumb = BoxStyle(new Color(0.29f, 0.35f, 0.46f));
+            panelSkin.verticalScrollbar.normal.background = Texture(new Color(0.12f,0.11f,0.19f,0.6f), true);
+            panelSkin.verticalScrollbarThumb = BoxStyle(new Color(0.49f,0.45f,0.60f,0.8f));
             panelSkin.verticalScrollbarThumb.fixedWidth = 8;
             panelSkin.verticalScrollbarUpButton = new GUIStyle();
             panelSkin.verticalScrollbarDownButton = new GUIStyle();
-            panelSkin.horizontalSlider = BoxStyle(new Color(0.21f, 0.27f, 0.36f));
+            panelSkin.horizontalSlider = BoxStyle(new Color(0.38f,0.34f,0.48f,0.7f));
             panelSkin.horizontalSlider.fixedHeight = 4;
             panelSkin.horizontalSlider.margin = new RectOffset(0, 0, 8, 0);
             panelSkin.horizontalSliderThumb = BoxStyle(accent);
@@ -127,9 +132,10 @@ namespace ChillQQMusicPlaylist
             {
                 GUI.skin = panelSkin; GUI.depth = -10000;
                 GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(scale, scale, 1));
+                RenderLyrics();
                 if (!visible)
                 {
-                    if (showLauncher.Value && GUI.Button(new Rect(202, Screen.height / scale - 165, 170, 42), "QQ 音乐  ·  F9", buttonStyle)) visible = true;
+                    if (showLauncher.Value && DrawLauncher(new Rect(202, Screen.height / scale - 165, 170, 42), "QQ 音乐  ·  F9")) visible = true;
                     if (Time.realtimeSinceStartup < nativeNoticeUntil)
                     {
                         float noticeWidth = Mathf.Min(720, Screen.width / scale - 40);
@@ -141,9 +147,9 @@ namespace ChillQQMusicPlaylist
                 }
                 panel.x = Mathf.Clamp(panel.x, 0, Mathf.Max(0, Screen.width / scale - panel.width));
                 panel.y = Mathf.Clamp(panel.y, 0, Mathf.Max(0, Screen.height / scale - panel.height));
-                panel = GUI.Window(174939, panel, DrawPanel, "", windowStyle);
+                if (!lyricsSettingsOpen) panel = GUI.Window(174939, panel, DrawPanel, "", windowStyle);
             }
-            finally { GUI.skin = previousSkin; GUI.matrix = previousMatrix; GUI.depth = previousDepth; GUI.enabled = previousEnabled; }
+            finally { LyricsGuiFocus(); GUI.skin = previousSkin; GUI.matrix = previousMatrix; GUI.depth = previousDepth; GUI.enabled = previousEnabled; }
         }
         string Input(Rect rect, string value, string name, string placeholder)
         {
@@ -171,7 +177,8 @@ namespace ChillQQMusicPlaylist
         { GUI.Label(rect, new GUIContent(Fit(value, style, rect.width), value), style); }
         void DrawPanel(int id)
         {
-            GUI.Box(new Rect(24, 22, 42, 42), "", selectedStyle);
+            ThemeChrome();
+            GUI.Box(new Rect(24, 22, 42, 42), "", emblemStyle);
             GUI.Label(new Rect(33, 27, 30, 32), "Q", headingText);
             GUI.Label(new Rect(80, 18, 300, 36), "QQ 音乐", titleText);
             GUI.Label(new Rect(81, 52, 330, 22), "在放松时光里，听你的歌单", mutedText);
@@ -320,7 +327,8 @@ namespace ChillQQMusicPlaylist
         void DrawPlayer()
         {
             GUI.Box(new Rect(20, 583, 960, 87), "", cardStyle);
-            GUI.Label(new Rect(40, 598, 680, 29), "QQ 音乐歌曲已接入游戏原生播放器", bodyText);
+            if (GUI.Button(new Rect(654, 598, 76, 28), "歌词设置", quietButton)) lyricsSettingsOpen = true;
+            GUI.Label(new Rect(40, 598, 600, 29), "QQ 音乐歌曲已接入游戏原生播放器", bodyText);
             if (GUI.Button(new Rect(40, 631, 230, 30), showLauncher.Value ? "隐藏游戏内入口" : "显示游戏内入口", quietButton))
             {
                 showLauncher.Value = !showLauncher.Value;
@@ -328,10 +336,11 @@ namespace ChillQQMusicPlaylist
             }
             if (GUI.Button(new Rect(286, 631, 435, 30), new GUIContent("播放记录：" + (reportListening.Value ? "已开启" : "已关闭") + " · " + listeningMessage, "仅上报实际播放，平台决定统计结果。"), quietButton)) ToggleListening();
             if (GUI.Button(new Rect(750, 604, 210, 40), "收起并使用原生播放器", primaryButton)) visible = false;
-            Label(new Rect(30, 675, 938, 17), status, smallText);
+            GUI.Label(new Rect(30,681,938,36),new GUIContent(status,status),statusText);
         }
         void DisposeUI()
         {
+            DisposeLyricsUI();
             if (panelSkin != null) Destroy(panelSkin);
             if (font != null) Destroy(font);
             foreach (Texture2D texture in uiTextures) if (texture != null) Destroy(texture);
