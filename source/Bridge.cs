@@ -49,7 +49,8 @@ namespace ChillQQMusicPlaylist
         }
         public static string SongURL(string id)
         {
-            IntPtr mid = Utf8(id), quality = Utf8("128");
+            // Prefer 320 kbps; the native bridge automatically falls back when unavailable or unauthorized.
+            IntPtr mid = Utf8(id), quality = Utf8("320");
             try { return Take(QQMusicGetSongURL(mid, quality)); }
             finally { Marshal.FreeHGlobal(mid); Marshal.FreeHGlobal(quality); }
         }
