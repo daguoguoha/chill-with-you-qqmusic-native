@@ -220,6 +220,15 @@ func (c *Client) GetSongURL(songMid string, quality models.AudioQuality) (*model
 func (c *Client) GetSongURLWithFallback(songMid string, preferredQuality models.AudioQuality) (*models.SongURL, error) {
 	debugLog("[GetSongURLWithFallback] Getting URL for %s (preferred: %s)", songMid, preferredQuality)
 
+	// Honor the requested quality before falling back to server-selected streams.
+	if preferredQuality != "" {
+		url, err := c.GetSongURL(songMid, preferredQuality)
+		if err == nil && url != nil && url.URL != "" {
+			return url, nil
+		}
+		debugLog("[GetSongURLWithFallback] Preferred quality %s unavailable: %v", preferredQuality, err)
+	}
+
 	// Step 1: Try VIP mode first (some songs require VIP even for 128k)
 	url, err := c.GetSongURLAutoVIP(songMid)
 	if err == nil && url.URL != "" {
